@@ -1,38 +1,28 @@
 # Compiler and flags
 CXX = clang++
-CXXFLAGS = -Wall -std=c++17 -Iinclude
+CXXFLAGS = -Wall -std=c++20 -Iinclude -Isrc -Isrc/file -Iimage -Iinput
 
 # Directories
 SRCDIR = src
-INCDIR = src
-OBJDIR = obj
 BINDIR = bin
 
 # Executable name
-TARGET = myprogram
+TARGET = resize
 
 # Source files (wildcard to include all .cpp files in src and subdirectories)
 SRCS = $(wildcard $(SRCDIR)/**/*.cpp) $(wildcard $(SRCDIR)/*.cpp)
-
-# Object files (convert .cpp files to .o files in obj folder)
-OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRCS))
 
 # Default target: build the executable
 all: $(BINDIR)/$(TARGET)
 
 # Rule to build the executable
-$(BINDIR)/$(TARGET): $(OBJS)
+$(BINDIR)/$(TARGET): $(SRCS)
 	@mkdir -p $(BINDIR)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
-# Rule to compile .cpp files into .o files
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	@mkdir -p $(OBJDIR)/$(dir $<)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-# Clean rule to remove object files and executable
+# Clean rule to remove the executable
 clean:
-	rm -rf $(OBJDIR) $(BINDIR)
+	rm -rf $(BINDIR)
 
 # Run the program
 run: all
